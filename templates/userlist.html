@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Список пользователей{% endblock %}
+
+{% block page_content %}
+
+
+<div class="page-header">
+    <a href="/adduser" class="btn btn-success" role="button">Добавить нового пользователя</a>
+    {% if userlist %}<a href="/deleteuser" class="btn btn-danger" role="button">Удалить пользователя</a>{% endif %}
+
+    <h1>Список всех пользователей:</h1>
+
+</div>
+{% if userlist %}
+  <table class="table table-striped">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Имя пользователя</th>
+        <th>Роль</th>
+      </tr>
+    </thead>
+    <tbody>
+    {% for item in userlist%}
+      <tr>
+        <td>{{ item.id }}</td>
+        <td> {{ item.username }}</td>
+        <td> {{ item.role.name }}</td>
+          <td>
+              <a href="/userlist/delete/{{ item.id }}" class="btn btn-danger" role="button">Удалить</a>
+          </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% else %}
+    <p>В таблице нет ни одного пользователя</p>
+{% endif %}
+{% endblock %}

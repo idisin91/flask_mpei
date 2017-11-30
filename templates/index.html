@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Домашняя страница{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Домашняя страница</h1>
+</div>
+<div>
+    <h3>Пользователей: <b>{{ usercount }}</b> </h3>
+    <h3>Новостей: <b>{{ newscount }}</b>     <a href="/addnews" class="btn btn-success" role="button">Добавить новость</a>
+</h3>
+</div>
+{% endblock %}

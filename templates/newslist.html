@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Список новостей{% endblock %}
+
+{% block page_content %}
+<div class="page-header">
+    <a href="/addnews" class="btn btn-success" role="button">Добавить новость</a>
+    <h1>Список всех новостей:</h1>
+
+</div>
+{% if newslist %}
+    {% for item in newslist%}
+        <h3>{{ item.title }}</h3>
+        <p> {{ item.text }}</p>
+        <p> {{ item.author }}</p>
+        <a href="/newslist/delete/{{ item.id }}" class="btn btn-danger" role="button">Удалить</a>
+        <hr>
+    {% endfor %}
+{% else %}
+<p>В таблице нет ни одной новости</p>
+{% endif %}
+{% endblock %}

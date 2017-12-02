@@ -1,4 +1,4 @@
-from hello import db
+from app import db
 
 
 if __name__ == '__main__':

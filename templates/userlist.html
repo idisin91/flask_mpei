@@ -7,10 +7,9 @@
 
 
 <div class="page-header">
-    <a href="/adduser" class="btn btn-success" role="button">Добавить нового пользователя</a>
-    {% if userlist %}<a href="/deleteuser" class="btn btn-danger" role="button">Удалить пользователя</a>{% endif %}
+    <h1>Список всех пользователей           <a href="/adduser" class="btn btn-default align-baseline" role="button">Добавить нового пользователя</a>
 
-    <h1>Список всех пользователей:</h1>
+    </h1>
 
 </div>
 {% if userlist %}
@@ -20,6 +19,8 @@
         <th>ID</th>
         <th>Имя пользователя</th>
         <th>Роль</th>
+        <th></th>
+
       </tr>
     </thead>
     <tbody>
@@ -27,9 +28,9 @@
       <tr>
         <td>{{ item.id }}</td>
         <td> {{ item.username }}</td>
-        <td> {{ item.role.name }}</td>
+        <td> {{ item.role.rus_name }}</td>
           <td>
-              <a href="/userlist/delete/{{ item.id }}" class="btn btn-danger" role="button">Удалить</a>
+              <a href="/userlist/delete/{{ item.id }}" class="btn btn-danger btn-sm align-baseline" role="button">Удалить</a>
           </td>
       </tr>
     {% endfor %}

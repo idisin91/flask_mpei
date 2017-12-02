@@ -1,12 +1,13 @@
-from flask import Flask, render_template, session, redirect, url_for, flash
-from flask_bootstrap import Bootstrap
-from flask_moment import Moment
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, DateField, TextField, BooleanField, SelectField, TextAreaField
-from wtforms.validators import DataRequired, Required
-from flask_sqlalchemy import SQLAlchemy
 import os
 import re
+from datetime import datetime
+from flask_moment import Moment
+from flask_wtf import FlaskForm
+from flask_bootstrap import Bootstrap
+from flask_sqlalchemy import SQLAlchemy
+from wtforms.validators import DataRequired, Required
+from flask import Flask, render_template, session, redirect, url_for, flash, jsonify
+from wtforms import StringField, SubmitField, DateField, TextField, BooleanField, SelectField, TextAreaField
 
 app = Flask(__name__)
 
@@ -27,7 +28,7 @@ class Role(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), unique=True)
     users = db.relationship('User', backref='role')
-
+    rus_name = db.Column(db.String(64), unique=True)
     def __repr__(self):
         return '<Role %r>' % self.name
 
@@ -38,6 +39,7 @@ class News(db.Model):
     title = db.Column(db.String(64), unique=True, index=True)
     text = db.Column(db.Text)
     author = db.Column(db.String(64))
+    link = db .Column(db.Text)
 
     def __repr__(self):
         return '<Table %r>' % self.title
@@ -47,11 +49,10 @@ class User(db.Model):
     __tablename__ = 'users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), unique=True, index=True)
+    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
     def __repr__(self):
         return '<User %r>' % self.username
-
-    role_id = db.Column(db.Integer, db.ForeignKey('roles.id'))
 
 
 class AddUserForm(FlaskForm):
@@ -71,7 +72,7 @@ class DeleteUserForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    openid = TextField('openid', validators=[Required()])
+    openid = StringField('openid', validators=[DataRequired()])
     remember_me = BooleanField('remember_me', default=False)
 
 
@@ -92,9 +93,11 @@ def internal_server_error(e):
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
+    admins = User.query.filter_by(role_id=1)
     newscount = len(News.query.all())
     usercount = len(User.query.all())
-    return render_template('index.html', usercount=usercount, newscount=newscount)
+    time = datetime.now()-app.config['TURN_ON_TIMESTAMP']
+    return render_template('index.html', usercount=usercount, newscount=newscount, admins=admins, time=time)
 
 
 @app.route('/adduser', methods=['GET', 'POST'])
@@ -159,7 +162,7 @@ def addnews():
             db.session.add(u)
             db.session.commit()
             flash("Новость \"%s\" успешно добавлен в базу" %form.title.data)
-            return redirect(url_for('addnews'))
+            return redirect(url_for('newslist'))
         else:
             flash('Новость с заголовком \"%s\" уже существует'% form.title.data)
             return render_template('addnews.html', form=form, username=session.get('username'),
@@ -188,7 +191,39 @@ def newslistdelete(id):
         return redirect(url_for('newslist'))
 
 
+@app.route('/api/1.0/news/', methods=['GET'])
+def api_getnews():
+    newslist = News.query.limit(30).offset(0)
+    news = []
+    for item in newslist:
+        news.append(
+            {
+                'id':item.id,
+                'title': item.title,
+                'text': item.text,
+                'author': item.author,
+                'link': item.link
+            }
+        )
+    return jsonify({'news': news})
+
+
+@app.route('/api/1.0/news/<id>', methods=['GET'])
+def api_get_by_id(id):
+    item = News.query.filter_by(id=id).first()
+    if item is None:
+        return jsonify({'news': []})
+
+    news = {
+            'id':item.id,
+            'title': item.title,
+            'text': item.text,
+            'author': item.author,
+            'link': item.link
+        }
+    return jsonify({'news': news})
 
 
 if __name__ == '__main__':
-    app.run()
+    app.config['TURN_ON_TIMESTAMP'] = datetime.now()
+    app.run(host='0.0.0.0')

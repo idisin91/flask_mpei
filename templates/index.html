@@ -8,8 +8,64 @@
     <h1>Домашняя страница</h1>
 </div>
 <div>
-    <h3>Пользователей: <b>{{ usercount }}</b> </h3>
-    <h3>Новостей: <b>{{ newscount }}</b>     <a href="/addnews" class="btn btn-success" role="button">Добавить новость</a>
-</h3>
+<section class="col-md-12">
+    <article class="panel panel-primary col-md-4">
+        <div class="panel-heading">
+            <h2 class="panel-title">Администраторы</h2>
+        </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <th>Имя</th>
+                        <th>ID</th>
+                    </thead>
+                    <tbody>
+                        {% for admin in admins %}
+                            <tr>
+                                <td>{{ admin.username }}</td>
+                                <td>{{ admin.id }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+    </article>
+    <article class="panel panel-primary col-md-4 col-md-offset-2">
+        <div class="panel-heading">
+            <h2 class="panel-title">Служебная информация</h2>
+        </div>
+        <div class="table-responsive">
+            <table class="table">
+            <tbody>
+                <tr>
+                    <td>Пользователей</td></td>
+                    <td><b>{{ usercount }}</b></td>
+                    <td><a href="/adduser" class="btn btn-success btn-xs btn-block" role="button">Добавить</a></td>
+                </tr>
+                <tr>
+                    <td>Новостей</td>
+                    <td><b>{{ newscount }}</b></td>
+                    <td><a href="/addnews" class="btn btn-success btn-xs btn-block" role="button">Добавить</a></td>
+                </tr>
+            </tbody>
+            </table>
+        </div>
+    </article>
+    <article class="panel panel-success col-md-offset-2 col-md-4">
+        <div class="panel-heading">
+            <h2 class="panel-title">Мониторинг системы</h2>
+        </div>
+            <div class="table-responsive">
+                <table class="table">
+                    <tbody>
+                            <tr>
+                                <td>Аптайм</td>
+                                <td>{{ time }}</td>
+                            </tr>
+                    </tbody>
+                </table>
+            </div>
+    </article>
+</section>
 </div>
 {% endblock %}

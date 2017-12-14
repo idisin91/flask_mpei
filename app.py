@@ -7,7 +7,7 @@ from flask_wtf import FlaskForm
 from models import Role, User, News
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
-from config import db, DevelopmentConfig
+from config import DevelopmentConfig
 from wtforms.validators import DataRequired, Required
 from flask import Flask, render_template, session, redirect, url_for, flash, jsonify
 from wtforms import StringField, SubmitField, DateField, TextField, BooleanField, SelectField, TextAreaField
@@ -22,15 +22,17 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config.SQLALCHEMY_TRACK_MODIFICAT
 bootstrap = Bootstrap(app)
 moment = Moment(app)
 
+
 class AddUserForm(FlaskForm):
     username = StringField('Имя пользователя', validators=[DataRequired()])
     role = SelectField('Роль', choices=[("admin","Администратор"), ("moder","Модератор"), ("user","Пользователь")])
     submit = SubmitField('Добавить')
 
+
 class AddNewsForm(FlaskForm):
     title = StringField('Название новости', validators=[DataRequired()])
-    text = TextAreaField('Текст новости', validators=[DataRequired()])
     author = StringField('Имя автора', validators=[DataRequired()])
+    text = TextAreaField('Текст новости', validators=[DataRequired()])
     submit = SubmitField('Отправить')
 
 class DeleteUserForm(FlaskForm):
@@ -71,12 +73,12 @@ def index():
 def adduser():
     form = AddUserForm()
     if form.validate_on_submit():
-        if (not (re.match("^[a-z0-9_-]{3,15}$",form.username.data))):
+        if (not (re.match("^[A-Za-z0-9_-]{3,15}$",form.username.data))):
             flash("Имя пользователя должно быть от 3 до 15 символов. Можно использовать строчные латинские буквы от a до z,цифры, дефис и символ нижнего подчеркивания. ")
             return redirect(url_for('adduser'))
-        user = User.query.filter_by(username=form.username.data.lower()).first()
+        username = form.username.data.lower()
+        user = User.query.filter_by(username=username).first()
         if user is None:
-            username = form.username.data
             role = form.role.data
             if(role=="admin"):
                 role_db = Role.query.filter_by(id=1).first()
@@ -105,14 +107,14 @@ def userlist():
 def userlistdelete(id):
     user = User.query.filter_by(id=id).first()
     if user is None:
-        if(not(id is None)):
-            flash('Пользователь c идентификатором %s не найден' %id)
-            return redirect(url_for('userlist'))
+        flash('Пользователь c идентификатором %s не найден' %id)
+        return redirect(url_for('userlist'))
 
     else:
+        username = user.username
         db.session.delete(user)
         db.session.commit()
-        flash("Пользователь c идентификатором %s успешно удален из базы" % id)
+        flash("Пользователь %s успешно удален из базы" % username)
         return redirect(url_for('userlist'))
 
 
@@ -147,10 +149,9 @@ def newslist():
 def newslistdelete(id):
     news = News.query.filter_by(id=id).first()
     if news is None:
-        if (not (news is None)):
-            flash('Новость с идентификатором %s не найдена' % id)
-            newslist = News.query.all()
-            return render_template('newslist.html', newslist=newslist)
+        flash('Новость с идентификатором %s не найдена' % id)
+        newslist = News.query.all()
+        return render_template('newslist.html', newslist=newslist)
     else:
         db.session.delete(news)
         db.session.commit()

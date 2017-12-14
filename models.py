@@ -1,4 +1,6 @@
-from config import db
+from manage import db
+
+
 class Role(db.Model):
     __tablename__ = 'roles'
     id = db.Column(db.Integer, primary_key=True)

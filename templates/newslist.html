@@ -12,8 +12,8 @@
 {% if newslist %}
     {% for item in newslist%}
         <h3>{{ item.title }}</h3>
-        <p> {{ item.text }}</p>
         <p> {{ item.author }}</p>
+        <p> {{ item.text }}</p>
         <a href="/newslist/delete/{{ item.id }}" class="btn btn-danger" role="button">Удалить</a>
         <hr>
     {% endfor %}

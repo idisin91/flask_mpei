@@ -1,3 +1,5 @@
 #!/usr/bi/env python
 import os
-from app import db
+from datetime import datetime
+from flask import Flask
+from flask_sqlalchemy import SQLAlchemy

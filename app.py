@@ -4,7 +4,6 @@ import re
 from datetime import datetime
 from flask_moment import Moment
 from flask_wtf import FlaskForm
-from models import Role, User, News
 from flask_bootstrap import Bootstrap
 from flask_sqlalchemy import SQLAlchemy
 from config import DevelopmentConfig
@@ -15,6 +14,7 @@ app = Flask(__name__)
 db = SQLAlchemy(app)
 config = DevelopmentConfig()
 basedir = os.path.abspath(os.path.dirname(__file__))
+from models import Role, User, News
 app.config['SECRET_KEY'] = config.SECRET_KEY
 app.config['SQLALCHEMY_DATABASE_URI'] = config.SQLALCHEMY_DATABASE_URI
 app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = config.SQLALCHEMY_COMMIT_ON_TEARDOWN

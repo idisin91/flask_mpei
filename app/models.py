@@ -17,8 +17,8 @@ class News(db.Model):
     title = db.Column(db.String(64), unique=True, index=True)
     text = db.Column(db.Text)
     author = db.Column(db.String(64))
-    link = db .Column(db.Text)
-
+    link = db.Column(db.Text)
+    date = db.Column(db.Integer)
     def __repr__(self):
         return '<Table %r>' % self.title
 

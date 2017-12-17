@@ -123,7 +123,7 @@ def api_getnews():
 
 @main.route('/api/1.0/news/offset/<offset>', methods=['GET'])
 def api_getnews_offset(offset):
-    newslist = News.query.limit(30).offset(offset)
+    newslist = News.query.offset(offset).limit(30)
     news = []
     for item in newslist:
         news.append(

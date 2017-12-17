@@ -121,6 +121,22 @@ def api_getnews():
         )
     return jsonify({'news': news})
 
+@main.route('/api/1.0/news/offset/<offset>', methods=['GET'])
+def api_getnews_offset(offset):
+    newslist = News.query.limit(30).offset(offset)
+    news = []
+    for item in newslist:
+        news.append(
+            {
+                'id':item.id,
+                'title': item.title,
+                'text': item.text,
+                'author': item.author,
+                'link': item.link
+            }
+        )
+    return jsonify({'news': news})
+
 
 @main.route('/api/1.0/news/<id>', methods=['GET'])
 def api_get_by_id(id):

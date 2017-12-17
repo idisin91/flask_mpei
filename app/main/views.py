@@ -12,8 +12,7 @@ def index():
     admins = User.query.filter_by(role_id=1)
     newscount = len(News.query.all())
     usercount = len(User.query.all())
-    time = datetime.now() - main.app.config['TURN_ON_TIMESTAMP']
-    return render_template('index.html', usercount=usercount, newscount=newscount, admins=admins, time=time)
+    return render_template('index.html', usercount=usercount, newscount=newscount, admins=admins)
 
 
 @main.route('/adduser', methods=['GET', 'POST'])
@@ -22,7 +21,7 @@ def adduser():
     if form.validate_on_submit():
         if (not (re.match("^[A-Za-z0-9_-]{3,15}$",form.username.data))):
             flash("Имя пользователя должно быть от 3 до 15 символов. Можно использовать строчные латинские буквы от a до z,цифры, дефис и символ нижнего подчеркивания. ")
-            return redirect(url_for('adduser'))
+            return redirect(url_for('.adduser'))
         username = form.username.data.lower()
         user = User.query.filter_by(username=username).first()
         if user is None:
@@ -55,14 +54,14 @@ def userlistdelete(id):
     user = User.query.filter_by(id=id).first()
     if user is None:
         flash('Пользователь c идентификатором %s не найден' %id)
-        return redirect(url_for('userlist'))
+        return redirect(url_for('.userlist'))
 
     else:
         username = user.username
         db.session.delete(user)
         db.session.commit()
         flash("Пользователь %s успешно удален из базы" % username)
-        return redirect(url_for('userlist'))
+        return redirect(url_for('.userlist'))
 
 
 @main.route('/addnews', methods=['GET', 'POST'])
@@ -78,7 +77,7 @@ def addnews():
             db.session.add(u)
             db.session.commit()
             flash("Новость \"%s\" успешно добавлен в базу" %form.title.data)
-            return redirect(url_for('newslist'))
+            return redirect(url_for('.newslist'))
         else:
             flash('Новость с заголовком \"%s\" уже существует'% form.title.data)
             return render_template('addnews.html', form=form, username=session.get('username'),
@@ -103,7 +102,7 @@ def newslistdelete(id):
         db.session.delete(news)
         db.session.commit()
         flash("Новость с id %s успешно удалена из базы" % id)
-        return redirect(url_for('newslist'))
+        return redirect(url_for('.newslist'))
 
 
 @main.route('/api/1.0/news/', methods=['GET'])

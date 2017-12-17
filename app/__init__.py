@@ -1,5 +1,5 @@
 from flask import Flask
-from flask_bootstrap import Bootstrap
+from flask_bootstrap import Bootstrap, bootstrap_find_resource
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
 
@@ -20,6 +20,7 @@ def create_app(config_name):
 
     moment.init_app(app)
     db.init_app(app)
+    bootstrap.init_app(app)
 
     from app.main import main as main_blueprint
     app.register_blueprint(main_blueprint)

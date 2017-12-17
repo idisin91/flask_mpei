@@ -17,7 +17,6 @@ def create_app(config_name):
     app.config['SQLALCHEMY_DATABASE_URI'] = config[config_name].SQLALCHEMY_DATABASE_URI
     app.config['SQLALCHEMY_COMMIT_ON_TEARDOWN'] = config[config_name].SQLALCHEMY_COMMIT_ON_TEARDOWN
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = config[config_name].SQLALCHEMY_TRACK_MODIFICATIONS
-
     moment.init_app(app)
     db.init_app(app)
     bootstrap.init_app(app)

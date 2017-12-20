@@ -139,8 +139,8 @@ def api_getnews_offset(offset):
         )
     return jsonify({'news': news})
 
-# data of news with id
 
+# data of news with id
 @main.route('/api/1.0/news/<id>', methods=['GET'])
 def api_get_by_id(id):
     item = News.query.filter_by(id=id).first()

@@ -4,8 +4,10 @@
 {% block title %}Добавить пользователя{% endblock %}
 
 {% block page_content %}
-<div class="page-header">
-    <h1>Добавление новости в базу данных</h1>
-</div>
-{{ wtf.quick_form(form) }}
+    <article class="panel panel-primary col-md-6 align-center">
+    <div class="panel-heading">
+         <h2 class="panel-title">Добавление новости в базу данных</h2>
+     </div>
+        {{ wtf.quick_form(form) }}
+    </article>
 {% endblock %}

@@ -7,6 +7,7 @@ from .. import db
 from ..models import User, Role, News
 
 
+# home page
 @main.route('/', methods=['GET', 'POST'])
 def index():
     admins = User.query.filter_by(role_id=1)
@@ -14,7 +15,7 @@ def index():
     usercount = len(User.query.all())
     return render_template('index.html', usercount=usercount, newscount=newscount, admins=admins)
 
-
+# adding user
 @main.route('/adduser', methods=['GET', 'POST'])
 def adduser():
     form = AddUserForm()
@@ -42,13 +43,13 @@ def adduser():
         return redirect(url_for('adduser'))
     return render_template('adduser.html', form=form, username=session.get('username'), password=session.get('password'))
 
-
+# list of all users
 @main.route('/userlist', methods=['POST', 'GET'])
 def userlist():
     userlist = User.query.all()
     return render_template('userlist.html', userlist=userlist)
 
-
+# deleting user
 @main.route('/userlist/delete/<id>', methods=['POST', 'GET'])
 def userlistdelete(id):
     user = User.query.filter_by(id=id).first()
@@ -63,7 +64,7 @@ def userlistdelete(id):
         flash("Пользователь %s успешно удален из базы" % username)
         return redirect(url_for('.userlist'))
 
-
+# adding news
 @main.route('/addnews', methods=['GET', 'POST'])
 def addnews():
     form = AddNewsForm()
@@ -84,13 +85,13 @@ def addnews():
                                    password=session.get('password'))
     return render_template('addnews.html', form=form, username=session.get('username'), password=session.get('password'))
 
-
+# list of all news
 @main.route('/newslist', methods=['GET', 'POST'])
 def newslist():
     news = News.query.all()
     return render_template('newslist.html', newslist=news)
 
-
+# deleting news
 @main.route('/newslist/delete/<id>', methods=['GET', 'POST'])
 def newslistdelete(id):
     news = News.query.filter_by(id=id).first()
@@ -104,7 +105,7 @@ def newslistdelete(id):
         flash("Новость с id %s успешно удалена из базы" % id)
         return redirect(url_for('.newslist'))
 
-
+# list of all news in JSON format
 @main.route('/api/1.0/news/', methods=['GET'])
 def api_getnews():
     newslist = News.query.limit(30).offset(0)
@@ -121,6 +122,7 @@ def api_getnews():
         )
     return jsonify({'news': news})
 
+# list of all news in JSON format with offset
 @main.route('/api/1.0/news/offset/<offset>', methods=['GET'])
 def api_getnews_offset(offset):
     newslist = News.query.offset(offset).limit(30)
@@ -137,6 +139,7 @@ def api_getnews_offset(offset):
         )
     return jsonify({'news': news})
 
+# data of news with id
 
 @main.route('/api/1.0/news/<id>', methods=['GET'])
 def api_get_by_id(id):
